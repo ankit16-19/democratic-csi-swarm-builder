@@ -1,114 +1,105 @@
 jobs:
-  check-latest-release:
-    name: Check latest release
+  build-new-plugin-image:
+    if: needs.check-latest-tag.outputs.is-new == '1'
+    name: Build new plugin image
+    needs:
+      - check-latest-tag
+    permissions:
+      contents: read
+      packages: write
     runs-on: ubuntu-24.04
-    # outputs:
-    #   latest-release: ${{ steps.get-latest-release.outputs.release }}
-    #   latest-release-description: ${{ steps.get-latest-release.outputs.description }}
-    #   latest-release-url: https://github.com/Trixarian/NetherSX2-patch/releases/tag/${{ steps.get-latest-release.outputs.release }}
-    #   is-new-release: ${{ steps.compare-releases.outputs.is-new }}
     steps:
-      - id: democratic-csi-image-data
-        name: Democratic CSI image data
-        uses: docker/metadata-action@v5
+      - id: checkout-repository-code
+        name: Checkout repository code
+        uses: actions/checkout@v3
+
+      - id: log-in-to-github-container-registry
+        name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
         with:
-          images: democraticcsi/democratic-csi
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
 
-      - run: |
-          echo ${{ steps.democratic-csi-image-data.outputs.tags }}
-    
-      # - name: Get last processed release
-      #   id: get-last-processed-release
-      #   uses: pozetroninc/github-action-get-latest-release@v0.8.0
-      #   with:
-      #     repository: ${{ github.repository }}
-      #     token: ${{ secrets.GITHUB_TOKEN }}
+      - id: extract-original-docker-image
+        name: Extract original Docker image
+        uses: shrink/actions-docker-extract@v3
+        with:
+          destination: rootfs
+          image: democraticcsi/democratic-csi:${{ needs.check-latest-tag.outputs.latest-in-docker-hub }}
+          path: .
 
-      # - name: Get latest release from NetherSX2-patch repository
-      #   id: get-latest-release
-      #   uses: pozetroninc/github-action-get-latest-release@v0.8.0
-      #   with:
-      #     owner: Trixarian
-      #     repo: NetherSX2-patch
+      - id: create-docker-plugin
+        name: Create Docker Plugin
+        run: >
+          docker plugin create
+          ghcr.io/cloud-skeleton/democratic-csi-swarm:${{ needs.check-latest-tag.outputs.latest-in-docker-hub }}
+          .
 
-      # - name: Compare releases
-      #   id: compare-releases
-      #   run: |
-      #     if [ "${{ steps.get-last-processed-release.outputs.release }}" = "${{ steps.get-latest-release.outputs.release }}" ]; then
-      #       echo "is-new=0" >> "$GITHUB_OUTPUT"
-      #     else
-      #       echo "is-new=1" >> "$GITHUB_OUTPUT"
-      #     fi
+      - id: push-docker-plugin
+        name: Push Docker plugin
+        run: >
+          docker plugin push
+          ghcr.io/cloud-skeleton/democratic-csi-swarm:${{ needs.check-latest-tag.outputs.latest-in-docker-hub }}
 
-#   build-apk:
-#     name: Build APK
-#     needs:
-#       - check-latest-release
-#     if: needs.check-latest-release.outputs.is-new-release == '1'
-#     runs-on: ubuntu-24.04
-#     outputs:
-#       apk-name: ${{ steps.patch-aethersx2-apk.outputs.result-apk-name }}
-#     steps:
-#       - name: Check out NetherSX2-patch repository
-#         uses: actions/checkout@v4
-#         with:
-#           repository: Trixarian/NetherSX2-patch
-#           ref: ${{ needs.check-latest-release.outputs.latest-release }}
-#           path: NetherSX2-patch
+      - id: remove-docker-plugin
+        name: Remove Docker plugin
+        run: >
+          docker plugin rm
+          ghcr.io/cloud-skeleton/democratic-csi-swarm:${{ needs.check-latest-tag.outputs.latest-in-docker-hub }}
 
-#       - name: Install missing dependencies
-#         run: |
-#           sudo apt update
-#           sudo apt install -y xdelta3
+      - id: create-docker-plugin-latest
+        name: Create Docker Plugin (Latest)
+        run: >
+          docker plugin create
+          ghcr.io/cloud-skeleton/democratic-csi-swarm:latest
+          .
 
-#       - name: Patch AetherSX2 APK
-#         id: patch-aethersx2-apk
-#         working-directory: NetherSX2-patch
-#         run: |
-#           ./patch-apk.sh
-#           mv *-patched.apk ../${APK_NAME}
-#           echo "result-apk-name=${APK_NAME}" >> "$GITHUB_OUTPUT"
-#         env:
-#           APK_NAME: nethersx2-patch-${{ needs.check-latest-release.outputs.latest-release }}.apk
+      - id: push-docker-plugin-latest
+        name: Push Docker plugin (latest)
+        run: >
+          docker plugin push
+          ghcr.io/cloud-skeleton/democratic-csi-swarm:latest
 
-#       - name: Upload APK artifact
-#         uses: actions/upload-artifact@v4
-#         with:
-#           compression-level: 9
-#           if-no-files-found: error
-#           name: ${{ steps.patch-aethersx2-apk.outputs.result-apk-name }}
-#           path: ${{ steps.patch-aethersx2-apk.outputs.result-apk-name }}
+  check-latest-tag:
+    name: Check latest tag
+    outputs:
+      is-new: ${{ steps.compare-image-tags.outputs.is-new-tag }}
+      latest-in-docker-hub: ${{ steps.get-docker-hub-image-tag.outputs.tag }}
+      latest-in-github-registry: ${{ steps.get-github-registry-image-tag.outputs.latest_tag }}
+    permissions:
+      packages: read
+    runs-on: ubuntu-24.04
+    steps:
+      - id: get-docker-hub-image-tag
+        name: Get Docker hub image tag
+        uses: jacobtomlinson/gha-get-docker-hub-tags@0.1.1
+        with:
+          org: democraticcsi
+          repo: democratic-csi
 
-#   create-release:
-#     if: ${{ needs.build-apk.result == 'success' }}
-#     name: Create release
-#     needs:
-#       - check-latest-release
-#       - build-apk
-#     permissions:
-#       contents: write
-#     runs-on: ubuntu-24.04
-#     steps:
-#       - name: Download APK artifact
-#         uses: actions/download-artifact@v4
-#         with:
-#           name: ${{ needs.build-apk.outputs.apk-name }}
+      - id: get-github-registry-image-tag
+        if: ${{ inputs.force_renew != 'true' }}
+        name: Get Github registry image tag
+        uses: nickkostov/docker-label-grepper@v1.0.0
+        with:
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          image: democratic-csi-swarm
+          image_identifier: v
+          org: cloud-skeleton
 
-#       - name: Create release changelog
-#         run: |
-#           ORIGINAL_CHANGELOG="${{ needs.check-latest-release.outputs.latest-release-description }}"
-#           TRIMMED_CHANGELOG="$(echo "${ORIGINAL_CHANGELOG}" | sed '/^### This release contains the following files:/,$d')"
-#           echo -e "# From <${{ needs.check-latest-release.outputs.latest-release-url }}>\n\n${TRIMMED_CHANGELOG}" >> CHANGELOG.txt
-
-#       - name: Create release
-#         uses: softprops/action-gh-release@v2
-#         with:
-#           body_path: CHANGELOG.txt
-#           fail_on_unmatched_files: true
-#           files: ${{ needs.build-apk.outputs.apk-name }}
-#           make_latest: true
-#           tag_name: ${{ needs.check-latest-release.outputs.latest-release }}
-
+      - id: compare-image-tags
+        name: Compare image tags
+        run: |
+          if [ "${{ inputs.force_renew }}" = true ]; then
+            echo "is-new-tag=1" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "${{ steps.get-docker-hub-image-tag.outputs.tag }}" = "${{ steps.get-github-registry-image-tag.outputs.latest_tag }}" ]; then
+            echo "is-new-tag=0" >> "$GITHUB_OUTPUT"
+          else
+            echo "is-new-tag=1" >> "$GITHUB_OUTPUT"
+          fi
 
 name: Build new plugin image
 
@@ -116,3 +107,8 @@ on:
   schedule:
     - cron: "0 3 * * *"
   workflow_dispatch:
+    inputs:
+      force_renew:
+        default: 'true'
+        description: Force renew plugin
+        required: false
