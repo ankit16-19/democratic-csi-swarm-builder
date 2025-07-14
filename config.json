@@ -30,6 +30,18 @@
       "destination": "/etc/democratic-csi.yml",
       "type": "bind",
       "options": ["bind", "ro"]
+    },
+    {
+      "name": "host-dir",
+      "description": "Host filesystem for CSI chroot",
+      "source": "/",
+      "destination": "/host",
+      "type": "bind",
+      "options": [
+        "bind",
+        "rbind",
+        "rshared"
+      ]
     }
   ],
   "env": [
