@@ -147,6 +147,18 @@
         "rbind",
         "ro"
       ]
+    },
+    {
+      "name": "data-root",
+      "description": "Host CSI data root (stage & publish)",
+      "source": "/data",
+      "destination": "/data",
+      "type": "bind",
+      "options": [
+        "bind",
+        "rbind",
+        "rshared"
+      ]
     }
   ],
   "env": [
