@@ -5,7 +5,7 @@
     "/home/csi/app/bin/democratic-csi",
     "--driver-config-file", "/etc/democratic-csi.yml",
     "--log-level", "info",
-    "--csi-version", "1.9.0",
+    "--csi-version", "1.0.0",
     "--csi-name", "democratic-csi",
     "--server-socket", "/run/docker/plugins/democratic-csi.sock"
   ],
@@ -29,10 +29,7 @@
       "source": "/etc/democratic-csi.yml",
       "destination": "/etc/democratic-csi.yml",
       "type": "bind",
-      "options": [
-        "bind",
-        "ro"
-      ]
+      "options": ["bind","ro"]
     },
     {
       "name": "host-dir",
@@ -40,11 +37,7 @@
       "source": "/",
       "destination": "/host",
       "type": "bind",
-      "options": [
-        "bind",
-        "rbind",
-        "rshared"
-      ]
+      "options": ["bind","rbind","rshared"]
     }
   ],
   "env": [
