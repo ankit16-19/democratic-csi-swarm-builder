@@ -170,7 +170,7 @@
         "bind",
         "rbind",
         "rshared"
-      ]]
+      ]
     }
   ],
   "env": [
