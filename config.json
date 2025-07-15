@@ -149,16 +149,28 @@
       ]
     },
     {
-      "name": "data-root",
-      "description": "Host CSI data root (stage & publish)",
-      "source": "/data",
-      "destination": "/data",
+      "name": "staging-dir",
+      "description": "Host CSI staging dir",
+      "source": "/data/staged",
+      "destination": "/data/staged",
       "type": "bind",
       "options": [
         "bind",
         "rbind",
         "rshared"
       ]
+    },
+    {
+      "name": "publish-dir",
+      "description": "Host CSI publish dir",
+      "source": "/data/published",
+      "destination": "/data/published",
+      "type": "bind",
+      "options": [
+        "bind",
+        "rbind",
+        "rshared"
+      ]]
     }
   ],
   "env": [
