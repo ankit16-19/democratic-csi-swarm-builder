@@ -124,6 +124,22 @@
         "rbind",
         "rshared"
       ]
+    },
+    {
+      "name": "mount-bin",
+      "description": "Host util-linux mount binary",
+      "source": "/usr/bin/mount",
+      "destination": "/usr/local/bin/mount",
+      "type": "bind",
+      "options": ["bind", "ro"]
+    },
+    {
+      "name": "lib64",
+      "description": "Host libraries for mount",
+      "source": "/lib64",
+      "destination": "/lib64",
+      "type": "bind",
+      "options": ["bind", "rbind", "ro"]
     }
   ],
   "env": [
