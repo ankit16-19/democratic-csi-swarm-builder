@@ -131,7 +131,10 @@
       "source": "/usr/bin/mount",
       "destination": "/usr/local/bin/mount",
       "type": "bind",
-      "options": ["bind", "ro"]
+      "options": [
+        "bind",
+        "ro"
+      ]
     },
     {
       "name": "lib64",
@@ -139,7 +142,11 @@
       "source": "/lib64",
       "destination": "/lib64",
       "type": "bind",
-      "options": ["bind", "rbind", "ro"]
+      "options": [
+        "bind",
+        "rbind",
+        "ro"
+      ]
     }
   ],
   "env": [
