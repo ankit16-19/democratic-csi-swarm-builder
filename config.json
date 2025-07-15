@@ -47,11 +47,7 @@
     },
     {
       "name": "DEMOCRATIC_CSI_LOG_LEVEL",
-      "value": "verbose"
-    },
-    {
-      "name": "LOG_GRPC_SESSIONS",
-      "value": "1"
+      "value": "silly"
     }
   ]
 }
