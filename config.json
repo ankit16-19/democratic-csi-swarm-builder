@@ -48,6 +48,10 @@
     {
       "name": "CSI_ENDPOINT",
       "value": "unix:///run/docker/plugins/democratic-csi.sock"
+    },
+    {
+      "name": "DEMOCRATIC_CSI_LOG_LEVEL",
+      "value": "verbose"
     }
   ]
 }
