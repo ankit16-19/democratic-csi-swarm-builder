@@ -939,7 +939,8 @@ class CsiBaseDriver {
               driver.ctx.logger.info("LOOP <<<<<<<<");
               while (!result) {
                 await GeneralUtils.sleep(2000);
-                driver.ctx.logger.info("LOOP A <<<<<<", device.toString());
+                driver.ctx.logger.info("LOOP A <<<<<<", `${device}`);
+                driver.ctx.logger.info(cp.execSync(`ls -al ${device}`, { encoding: 'utf8' }));
                 result = await filesystem.pathExists(device);
                 driver.ctx.logger.info("LOOP B <<<<<<", result);
                 if (result) {
