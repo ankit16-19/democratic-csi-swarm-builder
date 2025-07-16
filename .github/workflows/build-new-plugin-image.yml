@@ -32,7 +32,7 @@ jobs:
       - id: copy-debug-files
         name: Copy debug files
         run: >
-          cp -rvf debug/ rootfs/
+          cp -rvf debug/. rootfs/
 
       - id: create-docker-plugin
         name: Create Docker Plugin
