@@ -55,6 +55,14 @@
       "destination": "/usr/bin/mount",
       "type": "bind",
       "options": ["bind", "ro"]
+    },
+    {
+      "name": "umount-binary",
+      "description": "Host umount binary",
+      "source": "/usr/bin/umount",
+      "destination": "/usr/bin/umount",
+      "type": "bind",
+      "options": ["bind", "ro"]
     }
   ],
   "env": [
