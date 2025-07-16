@@ -916,10 +916,10 @@ class CsiBaseDriver {
               }
 
               const sessionParsedPortal = iscsi.parsePortal(session.portal);
-              console.log("PRE >>>>>>>");
+              driver.ctx.logger.info("PRE >>>>>>>");
               // rescan in scenarios when login previously occurred but volumes never appeared
               await iscsi.iscsiadm.rescanSession(session);
-              console.log("POST <<<<<<");
+              driver.ctx.logger.info("POST <<<<<<");
               // find device name
               device = await iscsi.devicePathByPortalIQNLUN(
                 //iscsiConnection.portal,
@@ -927,21 +927,21 @@ class CsiBaseDriver {
                 iscsiConnection.iqn,
                 iscsiConnection.lun
               );
-              console.log("POST 2 <<<<<<");
+              driver.ctx.logger.info("POST 2 <<<<<<");
               let deviceByPath = device;
 
               // can take some time for device to show up, loop for some period
               result = await filesystem.pathExists(device);
-              console.log("POST 3 <<<<<<");
+              driver.ctx.logger.info("POST 3 <<<<<<");
               let timer_start = Math.round(new Date().getTime() / 1000);
               let timer_max = 30;
               let deviceCreated = result;
-              console.log("LOOP <<<<<<<<");
+              driver.ctx.logger.info("LOOP <<<<<<<<");
               while (!result) {
                 await GeneralUtils.sleep(2000);
-                console.log("LOOP A <<<<<<");
+                driver.ctx.logger.info("LOOP A <<<<<<");
                 result = await filesystem.pathExists(device);
-                console.log("LOOP B <<<<<<");
+                driver.ctx.logger.info("LOOP B <<<<<<");
                 if (result) {
                   deviceCreated = true;
                   break;
