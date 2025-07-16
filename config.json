@@ -46,6 +46,14 @@
       "destination": "/dev",
       "type": "bind",
       "options": ["bind","rbind"]
+    },
+    {
+      "name": "mount-binary",
+      "description": "Host mount binary",
+      "source": "/usr/bin/mount",
+      "destination": "/usr/bin/mount",
+      "type": "bind",
+      "options": ["bind", "ro"]
     }
   ],
   "env": [
