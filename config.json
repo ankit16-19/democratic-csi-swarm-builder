@@ -38,6 +38,14 @@
       "destination": "/host",
       "type": "bind",
       "options": ["bind","rbind","rshared"]
+    },
+    {
+      "name": "dev",
+      "description": "Host /dev",
+      "source": "/dev",
+      "destination": "/dev",
+      "type": "bind",
+      "options": ["bind","rbind"]
     }
   ],
   "env": [
