@@ -956,9 +956,11 @@ class CsiBaseDriver {
                   break;
                 }
               }
-
+              driver.ctx.logger.info("POST 4 <<<<<<");
               if (deviceCreated) {
+                driver.ctx.logger.info("POST 5 <<<<<<");
                 device = await filesystem.realpath(device);
+                driver.ctx.logger.info("POST 6 <<<<<<");
                 iscsiDevices.push(device);
 
                 driver.ctx.logger.info(
@@ -971,11 +973,13 @@ class CsiBaseDriver {
             // this will help in dm scenarios
             await GeneralUtils.sleep(2000);
 
+            driver.ctx.logger.info("POST 7 <<<<<<");
             // filter duplicates
             iscsiDevices = iscsiDevices.filter((value, index, self) => {
               return self.indexOf(value) === index;
             });
 
+            driver.ctx.logger.info("POST 8 <<<<<<", `${iscsiDevices}`);
             // only throw an error if we were not able to attach to *any* devices
             if (iscsiDevices.length < 1) {
               throw new GrpcError(
@@ -984,6 +988,7 @@ class CsiBaseDriver {
               );
             }
 
+            driver.ctx.logger.info("POST 9 <<<<<<");
             if (iscsiDevices.length != iscsiConnections.length) {
               driver.ctx.logger.warn(
                 `failed to attach all iscsi devices/targets/portals`
@@ -997,7 +1002,7 @@ class CsiBaseDriver {
                 );
               }
             }
-
+            driver.ctx.logger.info("POST 10 <<<<<<");
             // compare all device-mapper slaves with the newly created devices
             // if any of the new devices are device-mapper slaves treat this as a
             // multipath scenario
@@ -1006,7 +1011,7 @@ class CsiBaseDriver {
             let commonDevices = allDeviceMapperSlaves.filter((value) =>
               iscsiDevices.includes(value)
             );
-
+            driver.ctx.logger.info("POST 11 <<<<<<");
             const useMultipath =
               iscsiConnections.length > 1 || commonDevices.length > 0;
 
@@ -1024,7 +1029,7 @@ class CsiBaseDriver {
                 );
               }
             }
-
+            driver.ctx.logger.info("POST 12 <<<<<<");
             break;
 
           case "nvmeof":
