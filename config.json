@@ -65,10 +65,10 @@
       "options": ["bind", "ro"]
     },
     {
-      "name": "mke2fs-binary",
-      "description": "Host mke2fs binary",
-      "source": "/usr/sbin/mke2fs",
-      "destination": "/usr/sbin/mke2fs",
+      "name": "mkfs.ext4-binary",
+      "description": "Host mkfs.ext4 binary",
+      "source": "/usr/sbin/mkfs.ext4",
+      "destination": "/usr/sbin/mkfs.ext4",
       "type": "bind",
       "options": ["bind", "ro"]
     }
