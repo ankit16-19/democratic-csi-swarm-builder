@@ -63,6 +63,14 @@
       "destination": "/usr/bin/umount",
       "type": "bind",
       "options": ["bind", "ro"]
+    },
+    {
+      "name": "mke2fs-binary",
+      "description": "Host mke2fs binary",
+      "source": "/usr/sbin/mke2fs",
+      "destination": "/usr/sbin/mke2fs",
+      "type": "bind",
+      "options": ["bind", "ro"]
     }
   ],
   "env": [
