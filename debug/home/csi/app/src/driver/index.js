@@ -1518,8 +1518,7 @@ class CsiBaseDriver {
                     case "ext4":
                     case "ext4dev":
                       // force lazy init so mkfs not blocks request
-                      formatOptions.unshift("-O", "uninit_bg");
-                      formatOptions.unshift("-E", "lazy_itable_init=1,lazy_journal_init=1");
+                      formatOptions.unshift("-E", "nodiscard");
                       // disable reserved blocks in this scenario
                       formatOptions.unshift("-m", "0");
                       break;
