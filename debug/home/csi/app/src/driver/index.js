@@ -1517,7 +1517,12 @@ class CsiBaseDriver {
                     case "ext3":
                     case "ext4":
                     case "ext4dev":
-                      // force mkfs not to block request
+                      /**
+                       * Skip the automatic block‐discard (TRIM) phase so mkfs doesn’t
+                       * wait on the storage backend to zero/free every block. On many
+                       * iSCSI or thin‐provisioned volumes the discard step can stall
+                       * mkfs for minutes—`-E nodiscard` makes the format finish immediately.
+                       */
                       formatOptions.unshift("-E", "nodiscard");
                       // disable reserved blocks in this scenario
                       formatOptions.unshift("-m", "0");
