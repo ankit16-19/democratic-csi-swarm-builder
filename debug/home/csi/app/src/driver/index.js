@@ -1494,13 +1494,13 @@ class CsiBaseDriver {
                   );
                 }
               }
-              driver.ctx.logger.debug(
+              driver.ctx.logger.info(
                 `IS BLOCK DEVICE?: ${await filesystem.isBlockDevice(device)}`
               );
               if (await filesystem.isBlockDevice(device)) {
                 // format
                 result = await filesystem.deviceIsFormatted(device);
-                driver.ctx.logger.debug(
+                driver.ctx.logger.info(
                   `RESULT!!!?: ${result}`
                 );
                 if (!result) {
@@ -1521,8 +1521,13 @@ class CsiBaseDriver {
                       formatOptions.unshift("-m", "0");
                       break;
                   }
-
+                  driver.ctx.logger.info(
+                    `PREFORMAT!!! ${device} ${fs_type} ${formatOptions}`
+                  );
                   await filesystem.formatDevice(device, fs_type, formatOptions);
+                  driver.ctx.logger.info(
+                    `POST!!! ${device} ${fs_type} ${formatOptions}`
+                  );
                 }
 
                 let fs_info = await filesystem.getDeviceFilesystemInfo(device);
