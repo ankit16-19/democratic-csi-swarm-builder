@@ -22,6 +22,42 @@ docker plugin install --grant-all-permissions \
 
 > **Tip:**  
 > Before installing plugin create configuration for **[Democratic CSI][democratic-csi]** on host system path `/etc/democratic-csi.yml`.
+>
+> Example for Synology devices behind reverse proxy:
+>
+> ```yaml
+> driver: synology-iscsi
+>
+> httpConnection:
+>   host: <HOSTNAME>
+>   password: <PASSWORD>
+>   port: 443
+>   protocol: https
+>   serialize: true
+>   session: democratic-csi
+>   username: <USERNAME>
+>
+> iscsi:
+>   baseiqn: iqn.2025-07.<REVERSE DOMAIN>:democratic-csi.
+>   lunSnapshotTemplate:
+>     is_app_consistent: true
+>     is_locked: true
+>   lunTemplate:
+>     type: BLUN
+>   targetPortal: <HOSTNAME>
+>   targetTemplate:
+>     auth_type: 0
+>     max_sessions: 0
+>
+> # Until merged https://github.com/democratic-csi/democratic-csi/pull/501
+> node:
+>   format:
+>     ext4:
+>       customOptions:
+>         - -E
+>         - nodiscard
+> ```
+>
 
 ---
 
