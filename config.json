@@ -21,8 +21,7 @@
   },
   "linux": {
     "capabilities": [
-      "CAP_SYS_ADMIN",
-      "ALL"
+      "CAP_SYS_ADMIN"
     ]
   },
   "propagatedMount": "/data/published",
@@ -66,6 +65,14 @@
       "destination": "/usr/bin/umount",
       "type": "bind",
       "options": ["bind", "ro"]
+    },
+    {
+      "name": "sys",
+      "description": "Host /sys",
+      "source": "/sys",
+      "destination": "/sys",
+      "type": "bind",
+      "options": ["bind", "rbind"]
     }
   ],
   "env": [
