@@ -22,7 +22,8 @@
   "linux": {
     "capabilities": [
       "CAP_SYS_ADMIN"
-    ]
+    ],
+    "allowAllDevices": true
   },
   "propagatedMount": "/data/published",
   "mounts": [
