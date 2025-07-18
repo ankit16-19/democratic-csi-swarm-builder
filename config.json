@@ -4,7 +4,7 @@
   "entrypoint": [
     "/home/csi/app/bin/democratic-csi",
     "--driver-config-file", "/etc/democratic-csi.yml",
-    "--log-level", "info",
+    "--log-level", "silly",
     "--csi-version", "1.0.0",
     "--csi-name", "democratic-csi",
     "--server-socket", "/run/docker/plugins/democratic-csi.sock"
@@ -66,24 +66,12 @@
       "destination": "/usr/bin/umount",
       "type": "bind",
       "options": ["bind", "ro"]
-    },
-    {
-      "name": "mke2fs-binary",
-      "description": "Host mke2fs binary",
-      "source": "/usr/sbin/mke2fs",
-      "destination": "/usr/sbin/mke2fs",
-      "type": "bind",
-      "options": ["bind", "ro"]
     }
   ],
   "env": [
     {
       "name": "CSI_ENDPOINT",
       "value": "unix:///run/docker/plugins/democratic-csi.sock"
-    },
-    {
-      "name": "DEMOCRATIC_CSI_LOG_LEVEL",
-      "value": "silly"
     }
   ]
 }
