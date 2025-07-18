@@ -1494,10 +1494,15 @@ class CsiBaseDriver {
                   );
                 }
               }
-
+              driver.ctx.logger.debug(
+                `IS BLOCK DEVICE?: ${await filesystem.isBlockDevice(device)}`
+              );
               if (await filesystem.isBlockDevice(device)) {
                 // format
                 result = await filesystem.deviceIsFormatted(device);
+                driver.ctx.logger.debug(
+                  `RESULT!!!?: ${result}`
+                );
                 if (!result) {
                   let formatOptions = _.get(
                     driver.options.node.format,
