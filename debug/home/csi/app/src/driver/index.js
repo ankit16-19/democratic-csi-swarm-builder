@@ -2501,7 +2501,13 @@ class CsiBaseDriver {
     switch (driver.__getNodeOsDriver()) {
       case NODE_OS_DRIVER_POSIX:
         try {
+            driver.ctx.logger.info(
+              `UNMOUNT 1`
+            );
           result = await mount.pathIsMounted(block_path);
+            driver.ctx.logger.info(
+              `UNMOUNT 2 ${result}`
+            );
         } catch (err) {
           /**
            * on stalled fs such as nfs, even findmnt will return immediately for the base mount point
@@ -2523,30 +2529,72 @@ class CsiBaseDriver {
         }
 
         if (result) {
+          driver.ctx.logger.info(
+            `UNMOUNT 3 <block>`
+          );
           is_block = true;
           access_type = "block";
+          driver.ctx.logger.info(
+            `UNMOUNT 3-a PREINFO`
+          );
           block_device_info = await filesystem.getBlockDevice(block_path);
+          driver.ctx.logger.info(
+            `UNMOUNT 3-b POSTINFO ${block_device_info}`
+          );
           normalized_staging_path = block_path;
         } else {
+          driver.ctx.logger.info(
+            `UNMOUNT 3 <NOT block>`
+          );
           result = await mount.pathIsMounted(staging_target_path);
+          driver.ctx.logger.info(
+            `UNMOUNT 3-a Is mounted? ${result}`
+          );
           if (result) {
+            driver.ctx.logger.info(
+              `UNMOUNT 3-b PREDEVICE`
+            );
             let device = await mount.getMountPointDevice(staging_target_path);
+            driver.ctx.logger.info(
+              `UNMOUNT 3-c POSTDEVICE ${device}`
+            );
             result = await filesystem.isBlockDevice(device);
+            driver.ctx.logger.info(
+              `UNMOUNT 3-d is block? ${result}`
+            );
             if (result) {
               is_block = true;
+              driver.ctx.logger.info(
+                `UNMOUNT 3-e PRE GET DEVICE`
+              );
               block_device_info = await filesystem.getBlockDevice(device);
+              driver.ctx.logger.info(
+                `UNMOUNT 3-f POST GET DEVICE ${block_device_info}`
+              );
             }
           }
         }
-
+        driver.ctx.logger.info(
+          `UNMOUNT 4`
+        );
         result = await mount.pathIsMounted(normalized_staging_path);
+        driver.ctx.logger.info(
+          `UNMOUNT 5 is mounted? ${result}`
+        );
         if (result) {
           try {
             result = await GeneralUtils.retry(
               10,
               0,
               async () => {
-                return await mount.umount(normalized_staging_path, umount_args);
+                driver.ctx.logger.info(
+                  `UNMOUNT 6 pre UMOUNT`
+                );
+                let resultttt = await mount.umount(normalized_staging_path, umount_args);
+                driver.ctx.logger.info(
+                  `UNMOUNT 6 post UMOUNT ${resultttt}`
+                );
+                return resultttt;
               },
               {
                 minExecutionTime: 1000,
@@ -2582,15 +2630,25 @@ class CsiBaseDriver {
             }
           }
         }
-
+        driver.ctx.logger.info(
+          `UNMOUNT 7 is block? ${is_block}`
+        );
         if (is_block) {
+          driver.ctx.logger.info(
+            `UNMOUNT 8`
+          );
           let breakdeviceloop = false;
           let realBlockDeviceInfos = [];
           // detect if is a multipath device
+          driver.ctx.logger.info(
+            `UNMOUNT 9 pre mapper check`
+          );
           is_device_mapper = await filesystem.isDeviceMapperDevice(
             block_device_info.path
           );
-
+          driver.ctx.logger.info(
+            `UNMOUNT 10 is mapper? ${is_device_mapper}`
+          );
           if (is_device_mapper) {
             let realBlockDevices = await filesystem.getDeviceMapperDeviceSlaves(
               block_device_info.path
@@ -2603,7 +2661,9 @@ class CsiBaseDriver {
           } else {
             realBlockDeviceInfos = [block_device_info];
           }
-
+          driver.ctx.logger.info(
+            `UNMOUNT 11 block devices? ${realBlockDeviceInfos}`
+          );
           // TODO: this could be made async to detach all simultaneously
           for (const block_device_info_i of realBlockDeviceInfos) {
             if (breakdeviceloop) {
@@ -2612,19 +2672,30 @@ class CsiBaseDriver {
             switch (block_device_info_i.tran) {
               case "iscsi":
                 {
+                  driver.ctx.logger.info(
+                    `UNMOUNT 12 iscsi START ${block_device_info_i.path}`
+                  );
                   if (
                     await filesystem.deviceIsIscsi(block_device_info_i.path)
                   ) {
+                    driver.ctx.logger.info(
+                      `UNMOUNT 13 ISCSI CONFIRMED! ${block_device_info_i.path}`
+                    );
                     let parent_block_device =
                       await filesystem.getBlockDeviceParent(
                         block_device_info_i.path
                       );
-
+                    driver.ctx.logger.info(
+                      `UNMOUNT 14 PARENT BLOCK DEVICE ${block_device_info_i.path} ---> ${parent_block_device}`
+                    );
                     // figure out which iscsi session this belongs to and logout
                     // scan /dev/disk/by-path/ip-*?
                     // device = `/dev/disk/by-path/ip-${volume_context.portal}-iscsi-${volume_context.iqn}-lun-${volume_context.lun}`;
                     // parse output from `iscsiadm -m session -P 3`
                     let sessions = await iscsi.iscsiadm.getSessionsDetails();
+                    driver.ctx.logger.info(
+                      `UNMOUNT 15 SESSIONS ${block_device_info_i.path} ---> ${sessions}`
+                    );
                     for (let i = 0; i < sessions.length; i++) {
                       let session = sessions[i];
                       let is_attached_to_session = false;
@@ -2647,7 +2718,9 @@ class CsiBaseDriver {
                             }
                           );
                       }
-
+                      driver.ctx.logger.info(
+                        `UNMOUNT 16 IS ATTACHED TO SESSION? ${block_device_info_i.path} ---> ${session} ---> ${is_attached_to_session}`
+                      );
                       if (is_attached_to_session) {
                         let timer_start;
                         let timer_max;
@@ -2657,9 +2730,15 @@ class CsiBaseDriver {
                         let loggedOut = false;
                         while (!loggedOut) {
                           try {
+                            driver.ctx.logger.info(
+                              `UNMOUNT 17 PRELOGOUT ${block_device_info_i.path} ---> ${session}`
+                            );
                             await iscsi.iscsiadm.logout(session.target, [
                               session.persistent_portal,
                             ]);
+                            driver.ctx.logger.info(
+                              `UNMOUNT 18 POSTLOGOUT ${block_device_info_i.path} ---> ${session}`
+                            );
                             loggedOut = true;
                           } catch (err) {
                             await GeneralUtils.sleep(2000);
@@ -2667,6 +2746,9 @@ class CsiBaseDriver {
                               new Date().getTime() / 1000
                             );
                             if (current_time - timer_start > timer_max) {
+                              driver.ctx.logger.info(
+                                `UNMOUNT 19 !!!! LOGOUT TIMEOUT!!!!! ${block_device_info_i.path} ---> ${session}`
+                              );
                               // not throwing error for now as future invocations would not enter code path anyhow
                               loggedOut = true;
                               //throw new GrpcError(
@@ -2682,9 +2764,15 @@ class CsiBaseDriver {
                         let deletedEntry = false;
                         while (!deletedEntry) {
                           try {
+                            driver.ctx.logger.info(
+                              `UNMOUNT 21 PRE NODE DELETE ${block_device_info_i.path} ---> ${session}`
+                            );
                             await iscsi.iscsiadm.deleteNodeDBEntry(
                               session.target,
                               session.persistent_portal
+                            );
+                            driver.ctx.logger.info(
+                              `UNMOUNT 22 POST NODE DELETE ${block_device_info_i.path} ---> ${session}`
                             );
                             deletedEntry = true;
                           } catch (err) {
@@ -2730,16 +2818,31 @@ class CsiBaseDriver {
             }
           }
         }
-
+        driver.ctx.logger.info(
+          `UNMOUNT 23 ACCESS TYPE ${access_type}`
+        );
         if (access_type == "block") {
+          driver.ctx.logger.info(
+            `UNMOUNT 24 PRE CHECK PATH: ${block_path}`
+          );
           // remove touched file
           result = await filesystem.pathExists(block_path);
+          driver.ctx.logger.info(
+            `UNMOUNT 25 POST CHECK PATH: ${block_path} ${result}`
+          );
           if (result) {
             result = await GeneralUtils.retry(
               30,
               0,
               async () => {
-                return await filesystem.rm(block_path);
+                driver.ctx.logger.info(
+                  `UNMOUNT 26 PRE REMOVE: ${block_path}`
+                );
+                let resultato = await filesystem.rm(block_path);
+                driver.ctx.logger.info(
+                  `UNMOUNT 27 POST REMOVE: ${resultato}`
+                );
+                return resultato;
               },
               {
                 minExecutionTime: 1000,
@@ -2753,13 +2856,26 @@ class CsiBaseDriver {
           }
         }
 
+        driver.ctx.logger.info(
+          `UNMOUNT 28 PRE CHECK STAGING PATH: ${staging_target_path}`
+        );
         result = await filesystem.pathExists(staging_target_path);
+        driver.ctx.logger.info(
+          `UNMOUNT 28 POST CHECK STAGING PATH: ${staging_target_path} ${result}`
+        );
         if (result) {
           result = await GeneralUtils.retry(
             30,
             0,
             async () => {
-              return await filesystem.rmdir(staging_target_path);
+              driver.ctx.logger.info(
+                `UNMOUNT 29 PRE REMOVE: ${staging_target_path}`
+              );
+              let reeeeez = await filesystem.rmdir(staging_target_path);
+              driver.ctx.logger.info(
+                `UNMOUNT 30 PRE REMOVE: ${staging_target_path} ${reeeeez}`
+              );
+              return reeeeez;
             },
             {
               minExecutionTime: 1000,
