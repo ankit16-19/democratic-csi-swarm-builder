@@ -29,10 +29,10 @@ jobs:
           image: democraticcsi/democratic-csi:${{ needs.check-latest-tag.outputs.latest-in-docker-hub }}
           path: .
 
-      - id: copy-debug-files
-        name: Copy debug files
+      - id: copy-override-files
+        name: Copy override files
         run: >
-          cp -rvf debug/. rootfs/
+          cp -rvf override/. rootfs/
 
       - id: create-docker-plugin
         name: Create Docker Plugin
