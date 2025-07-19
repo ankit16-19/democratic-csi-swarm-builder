@@ -1,7 +1,7 @@
 {
-  "Description": "Democratic CSI plugin for Docker Swarm",
-  "Documentation": "https://github.com/democratic-csi/democratic-csi",
-  "Entrypoint": [
+  "description": "Democratic CSI plugin for Docker Swarm",
+  "documentation": "https://github.com/democratic-csi/democratic-csi",
+  "entrypoint": [
     "/home/csi/app/bin/democratic-csi",
     "--driver-config-file", "/etc/democratic-csi.yml",
     "--log-level", "silly",
@@ -9,77 +9,75 @@
     "--csi-name", "democratic-csi",
     "--server-socket", "/run/docker/plugins/democratic-csi.sock"
   ],
-  "Interface": {
-    "Types": [
+  "interface": {
+    "types": [
       "docker.csicontroller/1.0",
       "docker.csinode/1.0"
     ],
-    "Socket": "democratic-csi.sock"
+    "socket": "democratic-csi.sock"
   },
-  "Network": {
-    "Type": "host"
+  "network": {
+    "type": "host"
   },
-  "Linux": {
-    "Capabilities": [
+  "linux": {
+    "capabilities": [
       "CAP_SYS_ADMIN"
     ],
-    "AllowAllDevices": true
+    "allowAllDevices": true
   },
-  "PropagatedMount": "/data/published",
-  "Mounts": [
+  "propagatedMount": "/data/published",
+  "mounts": [
     {
-      "Name": "democratic-csi-config",
-      "Description": "Democratic CSI configuration file",
-      "Source": "/etc/democratic-csi.yml",
-      "Destination": "/etc/democratic-csi.yml",
-      "Type": "bind",
-      "Options": ["bind","ro"]
+      "name": "democratic-csi-config",
+      "description": "Democratic CSI configuration file",
+      "source": "/etc/democratic-csi.yml",
+      "destination": "/etc/democratic-csi.yml",
+      "type": "bind",
+      "options": ["bind","ro"]
     },
     {
-      "Name": "host-dir",
-      "Description": "Host filesystem for CSI chroot",
-      "Source": "/",
-      "Destination": "/host",
-      "Type": "bind",
-      "Options": ["bind","rbind","rshared"]
+      "name": "host-dir",
+      "description": "Host filesystem for CSI chroot",
+      "source": "/",
+      "destination": "/host",
+      "type": "bind",
+      "options": ["bind","rbind","rshared"]
     },
     {
-      "Name": "dev",
-      "Description": "Host /dev",
-      "Source": "/dev",
-      "Destination": "/dev",
-      "Type": "bind",
-      "Options": ["bind","rbind"]
+      "name": "dev",
+      "description": "Host /dev",
+      "source": "/dev",
+      "destination": "/dev",
+      "type": "bind",
+      "options": ["bind","rbind"]
     },
     {
-      "Name": "mount-binary",
-      "Description": "Host mount binary",
-      "Source": "/usr/bin/mount",
-      "Destination": "/usr/bin/mount",
-      "Type": "bind",
-      "Options": ["bind", "ro"]
+      "name": "mount-binary",
+      "description": "Host mount binary",
+      "source": "/usr/bin/mount",
+      "destination": "/usr/bin/mount",
+      "type": "bind",
+      "options": ["bind", "ro"]
     },
     {
-      "Name": "umount-binary",
-      "Description": "Host umount binary",
-      "Source": "/usr/bin/umount",
-      "Destination": "/usr/bin/umount",
-      "Type": "bind",
-      "Options": ["bind", "ro"]
+      "name": "umount-binary",
+      "description": "Host umount binary",
+      "source": "/usr/bin/umount",
+      "destination": "/usr/bin/umount",
+      "type": "bind",
+      "options": ["bind", "ro"]
     }
   ],
-  "Env": [
+  "env": [
     {
-      "Description": "The CSI socket endpoint for plugin-controller communication",
-      "Name": "CSI_ENDPOINT",
-      "Settable": [],
-      "Value": "unix:///run/docker/plugins/democratic-csi.sock"
+      "description": "The CSI socket endpoint for plugin-controller communication",
+      "name": "CSI_ENDPOINT",
+      "value": "unix:///run/docker/plugins/democratic-csi.sock"
     },
     {
-      "Description": "Method used to detect filesystem types (blkid or lsblk)",
-      "Name": "FILESYSTEM_TYPE_DETECTION_STRATEGY",
-      "Settable": [],
-      "Value": "blkid"
+      "description": "Method used to detect filesystem types (blkid or lsblk)",
+      "name": "FILESYSTEM_TYPE_DETECTION_STRATEGY",
+      "value": "blkid"
     }
   ] 
 }
