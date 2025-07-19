@@ -1498,8 +1498,11 @@ class CsiBaseDriver {
                 `IS BLOCK DEVICE?: ${await filesystem.isBlockDevice(device)}`
               );
               if (await filesystem.isBlockDevice(device)) {
+                driver.ctx.logger.info(
+                  `STRATEGY?: ${process.env.FILESYSTEM_TYPE_DETECTION_STRATEGY}`
+                );
                 // format
-                result = await filesystem.deviceIsFormatted(device);
+                result = await filesystem.deviceIsFormatted(device, driver.ctx.logger);
                 driver.ctx.logger.info(
                   `RESULT!!!?: ${result}`
                 );
