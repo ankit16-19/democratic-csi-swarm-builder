@@ -49,7 +49,10 @@ docker plugin install --grant-all-permissions \
 >     auth_type: 0
 >     max_sessions: 0
 >
-> # Until merged https://github.com/democratic-csi/democratic-csi/pull/501
+> # Skip the automatic block‐discard (TRIM) phase so mkfs doesn’t
+> # wait on the storage backend to zero/free every block. On many
+> # iSCSI or thin‐provisioned volumes the discard step can stall
+> # mkfs for minutes—`-E nodiscard` makes the format finish immediately.
 > node:
 >   format:
 >     ext4:
