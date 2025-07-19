@@ -70,16 +70,16 @@
   ],
   "Env": [
     {
-      "Description": "",
+      "Description": "The CSI socket endpoint for plugin-controller communication",
       "Name": "CSI_ENDPOINT",
       "Settable": [],
       "Value": "unix:///run/docker/plugins/democratic-csi.sock"
     },
     {
-      "Description": "",
+      "Description": "Method used to detect filesystem types (blkid or lsblk)",
       "Name": "FILESYSTEM_TYPE_DETECTION_STRATEGY",
       "Settable": [],
       "Value": "blkid"
     }
-  ]
+  ] 
 }
