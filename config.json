@@ -72,6 +72,10 @@
     {
       "name": "CSI_ENDPOINT",
       "value": "unix:///run/docker/plugins/democratic-csi.sock"
+    },
+    {
+      "name": "FILESYSTEM_TYPE_DETECTION_STRATEGY",
+      "value": "blkid"
     }
   ]
 }
