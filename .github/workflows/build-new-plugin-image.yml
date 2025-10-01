@@ -1,6 +1,6 @@
 jobs:
   build-new-plugin-image:
-    if: needs.check-latest-tag.outputs.is-new == '1'
+    # if: needs.check-latest-tag.outputs.is-new == '1'
     name: Build new plugin image
     needs:
       - check-latest-tag
@@ -26,7 +26,7 @@ jobs:
         uses: shrink/actions-docker-extract@v3
         with:
           destination: rootfs
-          image: democraticcsi/democratic-csi:${{ needs.check-latest-tag.outputs.latest-in-docker-hub }}
+          image: democraticcsi/democratic-csi:next
           path: .
 
       - id: copy-override-files
