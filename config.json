@@ -9,6 +9,7 @@
     "--csi-name", "democratic-csi",
     "--server-socket", "/run/docker/plugins/democratic-csi.sock"
   ],
+  "alias": "dcsi",
   "interface": {
     "types": [
       "docker.csicontroller/1.0",
