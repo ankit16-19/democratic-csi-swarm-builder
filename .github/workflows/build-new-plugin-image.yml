@@ -38,33 +38,33 @@ jobs:
         name: Create Docker Plugin
         run: >
           docker plugin create
-          ghcr.io/cloud-skeleton/democratic-csi-swarm:${{ needs.check-latest-tag.outputs.latest-in-docker-hub }}
+          ghcr.io/ankit16-19/democratic-csi-swarm:${{ needs.check-latest-tag.outputs.latest-in-docker-hub }}
           .
 
       - id: push-docker-plugin
         name: Push Docker plugin
         run: >
           docker plugin push
-          ghcr.io/cloud-skeleton/democratic-csi-swarm:${{ needs.check-latest-tag.outputs.latest-in-docker-hub }}
+          ghcr.io/ankit16-19/democratic-csi-swarm:${{ needs.check-latest-tag.outputs.latest-in-docker-hub }}
 
       - id: remove-docker-plugin
         name: Remove Docker plugin
         run: >
           docker plugin rm
-          ghcr.io/cloud-skeleton/democratic-csi-swarm:${{ needs.check-latest-tag.outputs.latest-in-docker-hub }}
+          ghcr.io/ankit16-19/democratic-csi-swarm:${{ needs.check-latest-tag.outputs.latest-in-docker-hub }}
 
       - id: create-docker-plugin-latest
         name: Create Docker Plugin (Latest)
         run: >
           docker plugin create
-          ghcr.io/cloud-skeleton/democratic-csi-swarm:latest
+          ghcr.io/ankit16-19/democratic-csi-swarm:latest
           .
 
       - id: push-docker-plugin-latest
         name: Push Docker plugin (latest)
         run: >
           docker plugin push
-          ghcr.io/cloud-skeleton/democratic-csi-swarm:latest
+          ghcr.io/ankit16-19/democratic-csi-swarm:latest
 
   check-latest-tag:
     name: Check latest tag
