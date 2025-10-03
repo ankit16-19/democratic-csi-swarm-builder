@@ -51,6 +51,30 @@
       "destination": "/dev",
       "type": "bind",
       "options": ["bind","rbind"]
+    },
+    {
+      "name": "sys",
+      "description": "Host /sys",
+      "source": "/sys",
+      "destination": "/sys",
+      "type": "bind",
+      "options": ["bind","rbind"]
+    },
+    {
+      "name": "mount-binary",
+      "description": "Host mount binary",
+      "source": "/usr/bin/mount",
+      "destination": "/usr/bin/mount",
+      "type": "bind",
+      "options": ["bind", "ro"]
+    },
+    {
+      "name": "umount-binary",
+      "description": "Host umount binary",
+      "source": "/usr/bin/umount",
+      "destination": "/usr/bin/umount",
+      "type": "bind",
+      "options": ["bind", "ro"]
     }
   ],
   "env": [
