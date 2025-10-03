@@ -92,6 +92,6 @@
       "description": "Use host mount tool",
       "name": "USE_HOST_MOUNT_TOOLS",
       "value": "1"
-    },
+    }
   ] 
 }
