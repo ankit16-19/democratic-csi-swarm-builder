@@ -67,6 +67,14 @@
       "options": ["bind","rbind"]
     },
     {
+      "name": "lib",
+      "description": "Host /lib",
+      "source": "/lib",
+      "destination": "/lib",
+      "type": "bind",
+      "options": ["bind","rbind"]
+    },
+    {
       "name": "mount-binary",
       "description": "Host mount binary",
       "source": "/usr/bin/mount",
