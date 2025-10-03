@@ -51,7 +51,7 @@
       "destination": "/dev",
       "type": "bind",
       "options": ["bind","rbind"]
-    },
+    }
   ],
   "env": [
     {
