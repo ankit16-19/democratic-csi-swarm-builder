@@ -75,6 +75,22 @@
       "destination": "/usr/bin/umount",
       "type": "bind",
       "options": ["bind", "ro"]
+    },
+    {
+      "name": "mount-binary local",
+      "description": "Host mount binary",
+      "source": "/usr/bin/mount",
+      "destination": "/usr/local/bin/mount",
+      "type": "bind",
+      "options": ["bind", "ro"]
+    },
+    {
+      "name": "umount-binary local",
+      "description": "Host umount binary",
+      "source": "/usr/bin/umount",
+      "destination": "/usr/local/bin/umount",
+      "type": "bind",
+      "options": ["bind", "ro"]
     }
   ],
   "env": [
