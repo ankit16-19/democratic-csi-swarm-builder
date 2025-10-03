@@ -113,7 +113,7 @@
     {
       "description": "host mount",
       "name": "USE_HOST_MOUNT_TOOLS",
-      "value": 1
+      "value": "1"
     }
   ] 
 }
