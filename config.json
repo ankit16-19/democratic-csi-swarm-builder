@@ -64,7 +64,7 @@
       "name": "mount-binary",
       "description": "Host mount binary",
       "source": "/usr/bin/mount",
-      "destination": "/usr/local/bin/mount",
+      "destination": "/usr/bin/mount",
       "type": "bind",
       "options": ["bind", "ro"]
     },
@@ -72,7 +72,7 @@
       "name": "umount-binary",
       "description": "Host umount binary",
       "source": "/usr/bin/umount",
-      "destination": "/usr/local/bin/umount",
+      "destination": "/usr/bin/umount",
       "type": "bind",
       "options": ["bind", "ro"]
     }
