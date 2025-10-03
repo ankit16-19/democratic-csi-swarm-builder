@@ -34,7 +34,7 @@
       "destination": "/etc/democratic-csi.yml",
       "type": "bind",
       "options": ["bind","ro"]
-    },
+    }
   ],
   "env": [
     {
