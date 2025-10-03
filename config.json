@@ -2,7 +2,7 @@
   "description": "Democratic CSI plugin for Docker Swarm",
   "documentation": "https://github.com/democratic-csi/democratic-csi",
   "entrypoint": [
-    "USE_HOST_MOUNT_TOOLS=1 /home/csi/app/bin/democratic-csi",
+    "/home/csi/app/bin/democratic-csi",
     "--driver-config-file", "/etc/democratic-csi.yml",
     "--log-level", "silly",
     "--csi-version", "1.0.0",
@@ -87,6 +87,11 @@
       "description": "Method used to detect filesystem types (blkid or lsblk)",
       "name": "FILESYSTEM_TYPE_DETECTION_STRATEGY",
       "value": "blkid"
-    }
+    },
+    {
+      "description": "Use host mount tool",
+      "name": "USE_HOST_MOUNT_TOOLS",
+      "value": "1"
+    },
   ] 
 }
